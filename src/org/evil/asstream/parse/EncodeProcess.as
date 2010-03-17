@@ -65,39 +65,39 @@ package org.evil.asstream.parse
 			for each(var prop : PropertyMetadata in properties) {
 				
 				// simple types can be sent right through the type converter
-				if (prop.isSimpleType()) {
-					if (obj[ prop.name ] != null) {
+				if (obj[ prop.name ] != null) {
+					if (prop.isSimpleType()) {
 						xmlString += typeConverter.toXml( obj[ prop.name ], prop.type, prop.alias );
+					} else if (prop.type == "Array") {
+						var arr:Array = obj[ prop.name ];
+						if (arr.length > 0) {
+							// if we are not processing an implicit collection, add wrapping element
+							if (!prop.implicit)
+								xmlString += "<"+prop.alias+" id=\""+(++refIndex)+"\">";
+							// now parse each item
+							for(var i:int=0; i<arr.length; i++)
+								xmlString += encodeObject( arr[i] );
+							// and add closing element
+							if (!prop.implicit)
+								xmlString += "</"+prop.alias+">";
+						}
+						// todo...
+					} else if (prop.type == "mx.collections::ArrayCollection") {
+						var arrCol:ArrayCollection = obj[ prop.name ];
+						if (arrCol.length > 0) {
+							// if we are not processing an implicit collection, add wrapping element
+							if (!prop.implicit)
+								xmlString += "<"+prop.alias+" id=\""+(++refIndex)+"\">";
+							// now parse each item
+							for each(var item : * in arrCol)
+								xmlString += encodeObject( item );
+							// and add closing element
+							if (!prop.implicit)
+								xmlString += "</"+prop.alias+">";
+						}
+					} else {
+						xmlString += encodeObject( obj[ prop.name ], prop.alias );
 					}
-				} else if (prop.type == "Array") {
-					var arr:Array = obj[ prop.name ];
-					if (arr != null && arr.length > 0) {
-						// if we are not processing an implicit collection, add wrapping element
-						if (!prop.implicit)
-							xmlString += "<"+prop.alias+" id=\""+(++refIndex)+"\">";
-						// now parse each item
-						for(var i:int=0; i<arr.length; i++)
-							xmlString += encodeObject( arr[i] );
-						// and add closing element
-						if (!prop.implicit)
-							xmlString += "</"+prop.alias+">";
-					}
-					// todo...
-				} else if (prop.type == "mx.collections::ArrayCollection") {
-					var arrCol:ArrayCollection = obj[ prop.name ];
-					if (arrCol != null && arrCol.length > 0) {
-						// if we are not processing an implicit collection, add wrapping element
-						if (!prop.implicit)
-							xmlString += "<"+prop.alias+" id=\""+(++refIndex)+"\">";
-						// now parse each item
-						for each(var item : * in arrCol)
-							xmlString += encodeObject( item );
-						// and add closing element
-						if (!prop.implicit)
-							xmlString += "</"+prop.alias+">";
-					}
-				} else {
-					xmlString += encodeObject( obj[ prop.name ], prop.alias );
 				}
 				
 			}

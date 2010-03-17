@@ -2,6 +2,8 @@ package org.evil.asstream
 {
 	import flash.utils.Dictionary;
 	
+	import org.evil.asstream.parse.DecodeProcess;
+	import org.evil.asstream.parse.EncodeProcess;
 	import org.evil.asstream.reflect.ClassMetadata;
 	import org.evil.asstream.reflect.MetadataProcessor;
 	
@@ -30,7 +32,7 @@ package org.evil.asstream
 		
 		public function toXml(obj:Object):XML
 		{
-			return null;
+			return (new EncodeProcess(this)).encode(obj);
 		}
 		
 		public function toString(obj:Object):String
@@ -40,7 +42,7 @@ package org.evil.asstream
 		
 		public function fromXml(xml:XML):Object
 		{
-			return null;
+			return (new DecodeProcess(this)).decode(xml);
 		}
 		
 		public function fromString(string:String):Object

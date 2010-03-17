@@ -106,7 +106,7 @@ package org.evil.asstream.reflect
 		private static function getAliasFromMetadata( metaXml : XML, defaultName : String ) : String
 		{
 			// try to retrieve alias from metadata
-			if (metaXml.metadata != undefined && metaXml.metadata.( @name== ALIAS_KEY ).length() > 0) {
+			if (metaXml.metadata != undefined && metaXml.metadata.( @name == ALIAS_KEY ).length() > 0) {
 				// grab metadata xml	
 				var aliasXml : XML = metaXml.metadata.( @name == ALIAS_KEY )[ 0 ];
 				
@@ -131,7 +131,7 @@ package org.evil.asstream.reflect
 		private static function hasImplicitMetadata( metaXml : XML ) : Boolean
 		{
 			// try to retrieve implicit from metadata
-			if (metaXml.metadata != undefined && metaXml.metadata.( @name== IMPLICIT_KEY ).length() > 0) {
+			if (metaXml.metadata != undefined && metaXml.metadata.( @name == IMPLICIT_KEY ).length() > 0) {
 				return true;
 			} else {
 				return false;
