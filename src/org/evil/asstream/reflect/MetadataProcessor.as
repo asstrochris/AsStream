@@ -35,10 +35,10 @@ package org.evil.asstream.reflect
 			var prop : PropertyMetadata;
 			
 			// build propeties from all the variables and accessors
-			createPropertiesFromList(classMetadata, classXml.variable);
-			createPropertiesFromList(classMetadata, classXml.accessor);
+			// get list of all variables and read/write accessors that are in the default namespace and are not [Transient]
+			var filteredElements:XMLList = classXml.*.( ( localName() == "variable" || ( localName() == "accessor" && @access == "readwrite" ) ) && attribute("uri") == undefined && descendants("metadata").@name != "Transient" );
+			createPropertiesFromList(classMetadata, filteredElements );
 			
-			// return
 			return classMetadata;
 		}
 		
