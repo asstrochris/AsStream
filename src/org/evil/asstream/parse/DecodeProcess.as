@@ -8,6 +8,7 @@ package org.evil.asstream.parse
 	import org.evil.asstream.IAsMappingProvider;
 	import org.evil.asstream.reflect.ClassMetadata;
 	import org.evil.asstream.reflect.ClassUtilities;
+	import org.evil.asstream.reflect.MetadataProcessor;
 	import org.evil.asstream.reflect.PropertyMetadata;
 	
 	public class DecodeProcess extends BaseParseProcess
@@ -53,18 +54,29 @@ package org.evil.asstream.parse
 			// return if we found it
 			if (obj != null) return obj;
 			
+			// by default, use the ClassMetadata that was passed in for recursion
+			var actualClassMeta:ClassMetadata = classMeta;
+			
 			// construct an instance of the type we found, or use value from "class" attribute if specified
 			if ( xml.attribute("class") == undefined )
+			{
 				obj = ClassUtilities.instanceForType( classMeta.type );
+			}
 			else
-				obj = ClassUtilities.instanceForType( xml.attribute("class") );
+			{
+				// if a different class was specified in the XML, create an instance of that class and resolve its metadata
+				var actualTypeName:String =  xml.attribute("class");
+				obj = ClassUtilities.instanceForType( actualTypeName );
+				var actualClazz:Class = ClassUtilities.classForName( actualTypeName );
+				actualClassMeta = MetadataProcessor.processClass( actualClazz );
+			}
 			
 			// add to cache
 			var elementId : String = xml.@id;
 			if (elementId != null && elementId != "") addToCache(elementId, obj);
 			
 			// process properties
-			contructProperties(xml, obj, classMeta);				
+			contructProperties(xml, obj, actualClassMeta);			
 			
 			// return object
 			return obj;
