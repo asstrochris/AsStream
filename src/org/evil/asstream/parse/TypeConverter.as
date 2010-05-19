@@ -55,14 +55,15 @@ package org.evil.asstream.parse
 		 * Parses a date using the configured format pattern.
 		 */
 		private function parseDate( value : String ) : Date {
-			return null;
+			return new Date( Date.parse( value ) );
 		}
 		
 		/**
 		 * Parses a date using the configured format pattern.
 		 */
 		private function formatDate( date : Date ) : String {
-			return dateFormatter.format(date);
+			//return dateFormatter.format(date);
+			return date.toUTCString();
 		}
 		
 		/**

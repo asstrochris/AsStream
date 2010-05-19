@@ -1,6 +1,7 @@
 package org.evil.asstream.reflect
 {
 	import flash.utils.describeType;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * MetadataProcessor is responsible for building ClassMetadata and PropertyMetadata objects for
@@ -35,9 +36,20 @@ package org.evil.asstream.reflect
 			var prop : PropertyMetadata;
 			
 			// build propeties from all the variables and accessors
-			// get list of all variables and read/write accessors that are in the default namespace and are not [Transient]
-			var filteredElements:XMLList = classXml.*.( ( localName() == "variable" || ( localName() == "accessor" && @access == "readwrite" ) ) && attribute("uri") == undefined && descendants("metadata").@name != "Transient" );
-			createPropertiesFromList(classMetadata, filteredElements );
+			// get list of all variables and read/write accessors that are in the default namespace
+			var filteredElements:XMLList = classXml.*.( ( localName() == "variable" || ( localName() == "accessor" && @access == "readwrite" ) ) && attribute("uri") == undefined );
+						
+			// build a new list that doesn't contain any elements with [Transient] metadata
+			// TODO: optimize this logic to be included in above E4X expression
+			var nonTransientElements:XML = new XML("<elements></elements>");
+			for each ( var element:XML in filteredElements )
+			{
+				var transient:XMLList = element.descendants("metadata").(@name == "Transient");
+				if ( transient.length() == 0 )
+					nonTransientElements.appendChild( element );
+			}
+			
+			createPropertiesFromList(classMetadata, nonTransientElements.children() );
 			
 			return classMetadata;
 		}

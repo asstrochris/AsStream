@@ -3,6 +3,7 @@ package org.evil.asstream.parse
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
+	import mx.utils.StringUtil;
 	
 	import org.evil.asstream.IAsMappingProvider;
 	import org.evil.asstream.reflect.ClassMetadata;
@@ -52,8 +53,11 @@ package org.evil.asstream.parse
 			// return if we found it
 			if (obj != null) return obj;
 			
-			// construct an instance of the type we found
-			obj = ClassUtilities.instanceForType(classMeta.type);
+			// construct an instance of the type we found, or use value from "class" attribute if specified
+			if ( xml.attribute("class") == undefined )
+				obj = ClassUtilities.instanceForType( classMeta.type );
+			else
+				obj = ClassUtilities.instanceForType( xml.attribute("class") );
 			
 			// add to cache
 			var elementId : String = xml.@id;
@@ -72,34 +76,40 @@ package org.evil.asstream.parse
 			var value : *;
 			for each(var prop : PropertyMetadata in properties) {
 				
-				if (xml.child(prop.alias) != undefined) {
-					// simple types can be sent right through the type converter
-					if (prop.isSimpleType()) {
-						value = xml.child(prop.alias)[0].toString();
-						obj[ prop.name ] = typeConverter.convertType(value, prop.type);
-					} else if (prop.type == "Array") {
-						var arr : Array = new Array();
-						// process XMLList (we will require a setting if this array is nested)
-						value = xml.child(prop.alias);
-						if (!prop.implicit)
-							value = value.children();
-						for each (var arrItemXml:XML in value)
-							arr.push(decodeObject(arrItemXml));
-						obj[ prop.name ] = arr;
-					} else if (prop.type == "mx.collections::ArrayCollection") {
-						var arrCol : ArrayCollection = new ArrayCollection();
-						// process XMLList (we will require a setting if this array is nested)
-						value = xml.child(prop.alias);
-						if (!prop.implicit)
-							value = value.children();
-						for each (var colItemXml:XML in value)
-							arrCol.addItem(decodeObject(colItemXml));
-						obj[ prop.name ] = arrCol;
-					} else {
-						//should be complex object?
-						var propertyClassMeta:ClassMetadata = findClassMetadataByType(prop.type);
-						obj[ prop.name ] = constructObject(xml.child(prop.alias)[0], propertyClassMeta);
+				try {
+					
+					if (xml.child(prop.alias) != undefined) {
+						// simple types can be sent right through the type converter
+						if (prop.isSimpleType()) {
+							value = xml.child(prop.alias)[0].toString();
+							obj[ prop.name ] = typeConverter.convertType(value, prop.type);
+						} else if (prop.type == "Array") {
+							var arr : Array = new Array();
+							// process XMLList (we will require a setting if this array is nested)
+							value = xml.child(prop.alias);
+							if (!prop.implicit)
+								value = value.children();
+							for each (var arrItemXml:XML in value)
+								arr.push(decodeObject(arrItemXml));
+							obj[ prop.name ] = arr;
+						} else if (prop.type == "mx.collections::ArrayCollection") {
+							var arrCol : ArrayCollection = new ArrayCollection();
+							// process XMLList (we will require a setting if this array is nested)
+							value = xml.child(prop.alias);
+							if (!prop.implicit)
+								value = value.children();
+							for each (var colItemXml:XML in value)
+								arrCol.addItem(decodeObject(colItemXml));
+							obj[ prop.name ] = arrCol;
+						} else {
+							//should be complex object?
+							var propertyClassMeta:ClassMetadata = findClassMetadataByType(prop.type);
+							obj[ prop.name ] = constructObject(xml.child(prop.alias)[0], propertyClassMeta);
+						}
 					}
+					
+				} catch ( error:Error ) {
+					trace( StringUtil.substitute( "error occurred while writing to property '{0}' on class '{1}', skipping. error was:\n{2} ", prop.name, classMeta.type, error.message ) );
 				}
 				
 			}
