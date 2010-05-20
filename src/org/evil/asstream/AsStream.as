@@ -37,7 +37,7 @@ package org.evil.asstream
 		
 		public function toString(obj:Object):String
 		{
-			return null;
+			return toXml(obj).toXMLString();
 		}
 		
 		public function fromXml(xml:XML):Object
@@ -47,7 +47,7 @@ package org.evil.asstream
 		
 		public function fromString(string:String):Object
 		{
-			return null;
+			return fromXml(new XML(string));
 		}
 		
 		/* ******************************** *I
