@@ -1,8 +1,11 @@
-package org.evil.asstream.reflect
+package org.evil.asstream.reflect.test
 {
-	import org.evil.asstream.test.Class1;
+	import org.evil.asstream.reflect.test.model.Class1;
 	import org.flexunit.asserts.assertNotNull;
 	import org.flexunit.asserts.assertNull;
+	import org.evil.asstream.reflect.ClassMetadata;
+	import org.evil.asstream.reflect.MetadataProcessor;
+	import org.evil.asstream.reflect.PropertyMetadata;
 
 	public class MetadataProcessorTests
 	{

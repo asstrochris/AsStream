@@ -26,12 +26,14 @@ package org.evil.asstream.parse
 		
 		private function encodeObject(obj:*, elementName:String=null, className:String=null):String 
 		{
-			
 			// first locate classMetadata
 			var classMeta : ClassMetadata = findClassMetadataForInstance(obj);
 			
 			// now constuct xml block
-			return contructXmlForClass(obj, classMeta, elementName, className);
+			if ( !typeConverter.isSimpleType( obj ) )
+				return contructXmlForClass(obj, classMeta, elementName, className);
+			else
+				return typeConverter.toXml( obj, classMeta.type, classMeta.type );
 		}
 		
 		private function contructXmlForClass(obj:*, classMeta:ClassMetadata, elementName:String=null, className:String=null):String
@@ -52,8 +54,11 @@ package org.evil.asstream.parse
 			// open xml element
 			var xmlString : String = "<"+(elementName!=null ? elementName : classMeta.alias)+" id=\""+refIndex+"\""+classNameString+">";;
 			
-			// add property nodes
-			xmlString += constructXmlForProperties(obj, classMeta);
+			// add property nodes or children nodes
+			if ( !typeConverter.isArray(obj) )
+				xmlString += constructXmlForProperties(obj, classMeta);
+			else
+				xmlString += constructXmlForChildren(obj);			
 			
 			// close xml
 			xmlString += "</"+(elementName!=null ? elementName : classMeta.alias)+">";
@@ -110,6 +115,17 @@ package org.evil.asstream.parse
 					trace( StringUtil.substitute( "error occurred while writing to property '{0}' on class '{1}', skipping. error was:\n{2} ", prop.name, classMeta.type, error.message ) );
 				}
 				
+			}
+			return xmlString;
+		}
+		
+		private function constructXmlForChildren(obj:*):String
+		{
+			var xmlString:String = "";
+			if ( typeConverter.isArray(obj) )
+			{
+				for each ( var child:* in obj )
+					xmlString += encodeObject( child );
 			}
 			return xmlString;
 		}

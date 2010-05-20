@@ -36,14 +36,28 @@ package org.evil.asstream.parse
 				// throw new Error("AsStream.CacheIdError: XML object does not contain an xml.@id, cannot use reference cache!");
 			var elementName : String = xml.localName();
 			
-			// try to find the ClassMetadata for the elementName, will create metadata if it doesn't exist
-			var classMeta : ClassMetadata = findClassMetadataByAlias(elementName);
-			
-			if (classMeta == null)
-				throw new Error("AsStream.ClassMappingError: Element <"+elementName+"> is not mapped to a class!");
-				
-			// construct an instance of the type we found
-			return constructObject(xml, classMeta);	
+			if ( !typeConverter.isSimpleElement( elementName ) )
+			{
+				if ( !typeConverter.isArrayElement( elementName ) )
+				{
+					// try to find the ClassMetadata for the elementName, will create metadata if it doesn't exist
+					var classMeta : ClassMetadata = findClassMetadataByAlias(elementName);
+					
+					if (classMeta == null)
+						throw new Error("AsStream.ClassMappingError: Element <"+elementName+"> is not mapped to a class!");
+					
+					// construct an instance of the type we found
+					return constructObject(xml, classMeta);	
+				}
+				else
+				{
+					return constructArray(xml);
+				}
+			}
+			else
+			{
+				return typeConverter.convertType(xml.toString(), elementName);
+			}
 		}
 		
 		private function constructObject(xml:XML, classMeta:ClassMetadata):* {
@@ -125,6 +139,14 @@ package org.evil.asstream.parse
 				}
 				
 			}
+		}
+		
+		private function constructArray(xml:XML):*
+		{
+			var array:Array = [];
+			for each ( var child:XML in xml.children() )
+				array.push(decodeObject(child));
+			return array;
 		}
 	}
 }

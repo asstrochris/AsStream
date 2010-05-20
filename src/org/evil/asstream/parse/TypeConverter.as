@@ -4,10 +4,22 @@ package org.evil.asstream.parse
 	
 	public class TypeConverter
 	{
-		private var dateFormatter : DateFormatter;
+		public function isSimpleType( obj:* ):Boolean {
+			return obj is String || obj is Number || obj is Boolean || obj is Date || obj is int || obj is uint;
+		}
 		
-		public function TypeConverter()
-		{
+		public function isSimpleElement( elementName:String ):Boolean {
+			return elementName == "String" || elementName == "Number" || elementName == "Boolean" || elementName == "Date" || elementName == "int" || elementName == "uint";
+		}
+		
+		// TODO: eventually we'll probably want a generic method that work for Array, ArrayCollection and *gasp* Vector. isCollection ?
+		public function isArray( obj:* ):Boolean {
+			return obj is Array;
+		}
+		
+		// TODO: eventually we'll probably want a generic method that work for Array, ArrayCollection and *gasp* Vector. isCollectionElement ?
+		public function isArrayElement( elementName:String ):Boolean {
+			return elementName == "Array";
 		}
 		
 		public function convertType( value : *, type : String ) : * {
@@ -62,7 +74,6 @@ package org.evil.asstream.parse
 		 * Parses a date using the configured format pattern.
 		 */
 		private function formatDate( date : Date ) : String {
-			//return dateFormatter.format(date);
 			return date.toUTCString();
 		}
 		

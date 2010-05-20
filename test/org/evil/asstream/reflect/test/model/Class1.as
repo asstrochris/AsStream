@@ -1,4 +1,4 @@
-package org.evil.asstream.test
+package org.evil.asstream.reflect.test.model
 {
 	import mx.collections.IList;
 
