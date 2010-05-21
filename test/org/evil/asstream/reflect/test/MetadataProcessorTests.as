@@ -29,22 +29,22 @@ package org.evil.asstream.reflect.test
 		 */
 		public function testPropertyFiltering():void
 		{
-			var simpleVariable:PropertyMetadata = classMeta.properties[ "simpleVariable" ];
+			var simpleVariable:PropertyMetadata = classMeta.getProperty( "simpleVariable" );
 			assertNotNull( "'simpleVariable' should be stored as property", simpleVariable );
 			
-			var readOnlyGetter:PropertyMetadata = classMeta.properties[ "readOnlyGetter" ];
+			var readOnlyGetter:PropertyMetadata = classMeta.getProperty( "readOnlyGetter" );
 			assertNull( "'readOnlyGetter' should not be stored as property", readOnlyGetter );
 			
-			var writeOnlySetter:PropertyMetadata = classMeta.properties[ "writeOnlySetter" ];
+			var writeOnlySetter:PropertyMetadata = classMeta.getProperty( "writeOnlySetter" );
 			assertNull( "'writeOnlySetter' should not be stored as property", writeOnlySetter );
 						
-			var accessor:PropertyMetadata = classMeta.properties[ "accessor" ];
+			var accessor:PropertyMetadata = classMeta.getProperty( "accessor" );
 			assertNotNull( "'accessor' should be stored as property", accessor );
 			
-			var transientVariable:PropertyMetadata = classMeta.properties[ "transientVariable" ];
+			var transientVariable:PropertyMetadata = classMeta.getProperty( "transientVariable" );
 			assertNull( "'transientVariable' should not be stored as property", transientVariable );
 			
-			var bindableTransientVariable:PropertyMetadata = classMeta.properties[ "bindableTransientVariable" ];
+			var bindableTransientVariable:PropertyMetadata = classMeta.getProperty( "bindableTransientVariable" );
 			assertNull( "'bindableTransientVariable' should not be stored as property", bindableTransientVariable );
 		}
 	}

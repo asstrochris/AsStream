@@ -98,7 +98,7 @@ package org.evil.asstream.parse
 		
 		private function contructProperties(xml:XML, obj:*, classMeta:ClassMetadata):void
 		{
-			var properties:Dictionary = classMeta.properties;
+			var properties:Array = classMeta.properties;
 			var value : *;
 			for each(var prop : PropertyMetadata in properties) {
 				

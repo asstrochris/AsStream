@@ -8,10 +8,12 @@ package org.evil.asstream.reflect
 		private var _type:String;
 		
 		private var _properties:Dictionary;
+		private var _propertiesArray:Array;
 		
 		public function ClassMetadata(alias:String, type:String)
 		{
 			_properties = new Dictionary();
+			_propertiesArray = [];
 			_alias = alias;
 			_type = type;
 		}
@@ -31,9 +33,9 @@ package org.evil.asstream.reflect
 			return _type;
 		}
 		
-		public function get properties():Dictionary
+		public function get properties():Array
 		{
-			return _properties;
+			return _propertiesArray;
 		}
 		
 		public function getProperty(name:String):PropertyMetadata
@@ -47,7 +49,8 @@ package org.evil.asstream.reflect
 		public function addProperty(property:PropertyMetadata):void
 		{
 			_properties[ property.name ] = property;
+			_propertiesArray.push( property );
+			_propertiesArray.sortOn( "name" );
 		}
-
 	}
 }

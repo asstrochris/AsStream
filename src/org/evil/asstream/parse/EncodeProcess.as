@@ -69,7 +69,7 @@ package org.evil.asstream.parse
 		private function constructXmlForProperties(obj:*, classMeta:ClassMetadata):String
 		{
 			var xmlString:String = "";
-			var properties:Dictionary = classMeta.properties;
+			var properties:Array = classMeta.properties;
 			
 			for each(var prop : PropertyMetadata in properties) {
 				
