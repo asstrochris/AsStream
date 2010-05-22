@@ -26,6 +26,7 @@ package org.evil.asstream.parse
 		
 		private function decodeList(xmlList:XMLList):ArrayCollection
 		{
+			// TODO: when to implement decodeList?
 			return null;
 		}
 		
@@ -36,27 +37,24 @@ package org.evil.asstream.parse
 				// throw new Error("AsStream.CacheIdError: XML object does not contain an xml.@id, cannot use reference cache!");
 			var elementName : String = xml.localName();
 			
-			if ( !typeConverter.isSimpleElement( elementName ) )
+			if ( typeConverter.isSimpleElement( elementName ) )
 			{
-				if ( !typeConverter.isArrayElement( elementName ) )
-				{
-					// try to find the ClassMetadata for the elementName, will create metadata if it doesn't exist
-					var classMeta : ClassMetadata = findClassMetadataByAlias(elementName);
-					
-					if (classMeta == null)
-						throw new Error("AsStream.ClassMappingError: Element <"+elementName+"> is not mapped to a class!");
-					
-					// construct an instance of the type we found
-					return constructObject(xml, classMeta);	
-				}
-				else
-				{
-					return constructArray(xml);
-				}
+				return typeConverter.convertType(xml.toString(), elementName);
+			}
+			else if ( typeConverter.isCollectionElement( elementName ) )
+			{
+				return constructCollection(xml, elementName);
 			}
 			else
 			{
-				return typeConverter.convertType(xml.toString(), elementName);
+				// try to find the ClassMetadata for the elementName, will create metadata if it doesn't exist
+				var classMeta : ClassMetadata = findClassMetadataByAlias(elementName);
+			
+				// construct an instance of the type we found
+				if (classMeta == null)
+					throw new Error("AsStream.ClassMappingError: Element <"+elementName+"> is not mapped to a class!");
+				
+				return constructObject(xml, classMeta);
 			}
 		}
 		
@@ -118,6 +116,17 @@ package org.evil.asstream.parse
 							for each (var arrItemXml:XML in value)
 								arr.push(decodeObject(arrItemXml));
 							obj[ prop.name ] = arr;
+						} else if (prop.type == "flash.utils::Dictionary") {
+							var dict:Dictionary = new Dictionary();
+							value = xml.child(prop.alias)[0];
+							value = value.children();
+							for each ( var entry:XML in value )
+							{
+								var key:* = decodeObject(entry.elements()[0]);
+								var dictValue:* = decodeObject(entry.elements()[1]);
+								dict[ key ] = dictValue;
+							}
+							obj[ prop.name ] = dict;
 						} else if (prop.type == "mx.collections::ArrayCollection") {
 							var arrCol : ArrayCollection = new ArrayCollection();
 							// process XMLList (we will require a setting if this array is nested)
@@ -141,12 +150,29 @@ package org.evil.asstream.parse
 			}
 		}
 		
-		private function constructArray(xml:XML):*
+		/**
+		 * Builds an Array or Dictionary based off related XML
+		 */
+		protected function constructCollection(xml:XML, elementName:String):*
 		{
-			var array:Array = [];
-			for each ( var child:XML in xml.children() )
-				array.push(decodeObject(child));
-			return array;
+			if ( elementName == "Array" )
+			{
+				var array:Array = [];
+				for each ( var child:XML in xml.children() )
+					array.push(decodeObject(child));
+				return array;
+			}
+			else if ( elementName == "flash.utils.Dictionary" )
+			{
+				var dict:Dictionary = new Dictionary();
+				for each ( var element:XML in xml.elements() )
+				{
+					var key:* = decodeObject(element.elements()[0])
+					var value:* = decodeObject(element.elements()[1])
+					dict[ key ] = value;
+				}
+				return dict;
+			}
 		}
 	}
 }

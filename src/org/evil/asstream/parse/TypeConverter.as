@@ -1,5 +1,8 @@
 package org.evil.asstream.parse
 {
+	import flash.utils.Dictionary;
+	
+	import mx.collections.ArrayCollection;
 	import mx.formatters.DateFormatter;
 	
 	public class TypeConverter
@@ -12,16 +15,16 @@ package org.evil.asstream.parse
 			return elementName == "String" || elementName == "Number" || elementName == "Boolean" || elementName == "Date" || elementName == "int" || elementName == "uint";
 		}
 		
-		// TODO: eventually we'll probably want a generic method that work for Array, ArrayCollection and *gasp* Vector. isCollection ?
-		public function isArray( obj:* ):Boolean {
-			return obj is Array;
+		// TODO: support ArrayCollection or Vector ?
+		public function isCollection( obj:* ):Boolean {
+			return obj is Array || obj is Dictionary;
 		}
 		
-		// TODO: eventually we'll probably want a generic method that work for Array, ArrayCollection and *gasp* Vector. isCollectionElement ?
-		public function isArrayElement( elementName:String ):Boolean {
-			return elementName == "Array";
+		// TODO: support ArrayCollection or Vector ?
+		public function isCollectionElement( elementName:String ):Boolean {
+			return elementName == "Array" || elementName == "flash.utils.Dictionary";
 		}
-		
+				
 		public function convertType( value : *, type : String ) : * {
 			
 			switch ( type ) {

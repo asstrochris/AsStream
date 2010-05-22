@@ -55,7 +55,7 @@ package org.evil.asstream.parse
 			var xmlString : String = "<"+(elementName!=null ? elementName : classMeta.alias)+" id=\""+refIndex+"\""+classNameString+">";;
 			
 			// add property nodes or children nodes
-			if ( !typeConverter.isArray(obj) )
+			if ( !typeConverter.isCollection(obj) )
 				xmlString += constructXmlForProperties(obj, classMeta);
 			else
 				xmlString += constructXmlForChildren(obj);			
@@ -91,6 +91,12 @@ package org.evil.asstream.parse
 								if (!prop.implicit)
 									xmlString += "</"+prop.alias+">";
 							}
+						} else if (prop.type == "flash.utils::Dictionary") {
+							var dict:Dictionary = obj[ prop.name ];
+							xmlString += "<"+prop.alias+" id=\""+(++refIndex)+"\">";
+							for each ( var key:* in getLexicalKeys(dict) )
+								xmlString += "<entry>" + encodeObject( key ) + encodeObject( dict[key] ) + "</entry>";
+							xmlString += "</"+prop.alias+">";
 							// todo...
 						} else if (prop.type == "mx.collections::ArrayCollection") {
 							var arrCol:ArrayCollection = obj[ prop.name ];
@@ -119,16 +125,35 @@ package org.evil.asstream.parse
 			return xmlString;
 		}
 		
-		private function constructXmlForChildren(obj:*):String
+		/**
+		 * Creates XML for the child objects of an Array or Dictionary
+		 */
+		protected function constructXmlForChildren(obj:*):String
 		{
 			var xmlString:String = "";
-			if ( typeConverter.isArray(obj) )
+			if ( obj is Array )
 			{
 				for each ( var child:* in obj )
 					xmlString += encodeObject( child );
 			}
+			else if ( obj is Dictionary )
+			{
+				for each ( var key:* in getLexicalKeys(obj) )
+					xmlString += "<entry>" + encodeObject( key ) + encodeObject( obj[key] ) + "</entry>";
+			}
 			return xmlString;
 		}
+		
+		/**
+		 * Returns the keys of a dictionary sorted lexically. Useful for ensuring consitent order of iteration.
+		 */
+		protected function getLexicalKeys( dict:Dictionary ):Array {
+			var keys:Array = [];
+			for ( var key:* in dict )
+				keys.push( key );
+			keys.sort();
+			return keys;
+		} 
 		
 		private function findClassMetadataForInstance(obj:*):ClassMetadata
 		{
