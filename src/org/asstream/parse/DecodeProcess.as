@@ -1,15 +1,31 @@
-package org.evil.asstream.parse
+/*
+* Copyright 2010 AsStream Contributors
+* 
+* Licensed under the Apache License, Version 2.0 (the "License"); you may not
+* use this file except in compliance with the License. You may obtain a copy of
+* the License. You may obtain a copy of the License at
+* 
+* http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+* WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+* License for the specific language governing permissions and limitations under
+* the License.
+*/
+
+package org.asstream.parse
 {
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
 	import mx.utils.StringUtil;
 	
-	import org.evil.asstream.IAsMappingProvider;
-	import org.evil.asstream.reflect.ClassMetadata;
-	import org.evil.asstream.reflect.ClassUtilities;
-	import org.evil.asstream.reflect.MetadataProcessor;
-	import org.evil.asstream.reflect.PropertyMetadata;
+	import org.asstream.IAsMappingProvider;
+	import org.asstream.reflect.ClassMetadata;
+	import org.asstream.reflect.ClassUtilities;
+	import org.asstream.reflect.MetadataProcessor;
+	import org.asstream.reflect.PropertyMetadata;
 	
 	public class DecodeProcess extends BaseParseProcess
 	{
