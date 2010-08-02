@@ -21,7 +21,7 @@ package org.asstream.reflect.test.model
 	/**
 	 * Test class for 
 	 */
-	public class Class1
+	public class PropertyFilterModel
 	{
 		public var simpleVariable:String;
 		

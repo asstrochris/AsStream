@@ -16,7 +16,7 @@
 
 package org.asstream.reflect.test
 {
-	import org.asstream.reflect.test.model.Class1;
+	import org.asstream.reflect.test.model.PropertyFilterModel;
 	import org.flexunit.asserts.assertNotNull;
 	import org.flexunit.asserts.assertNull;
 	import org.asstream.reflect.ClassMetadata;
@@ -30,7 +30,7 @@ package org.asstream.reflect.test
 		[Before]
 		public function setUp():void
 		{
-			classMeta = MetadataProcessor.processClass( Class1 );
+			classMeta = MetadataProcessor.processClass( PropertyFilterModel );
 		}
 		
 		[After]
