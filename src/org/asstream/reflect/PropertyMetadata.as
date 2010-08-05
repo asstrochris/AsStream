@@ -16,6 +16,9 @@
 
 package org.asstream.reflect
 {
+	/**
+	 * Holds metadata about a class property.
+	 */
 	public class PropertyMetadata
 	{
 		private var _name:String;

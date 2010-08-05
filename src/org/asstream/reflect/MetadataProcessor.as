@@ -27,10 +27,10 @@ package org.asstream.reflect
 	public class MetadataProcessor
 	{
 		
-		/** Key for Alias metadata element, incase I want to make this comfigurable. */
+		/** Key for Alias metadata element, incase I want to make this configurable. */
 		private static var ALIAS_KEY : String = "AsStreamAlias";
 		
-		/** Key for Alias metadata element, incase I want to make this comfigurable. */
+		/** Key for Alias metadata element, incase I want to make this configurable. */
 		private static var IMPLICIT_KEY : String = "AsStreamImplicit";
 	
 		public function MetadataProcessor() { }

@@ -23,6 +23,9 @@ package org.asstream
 	import org.asstream.reflect.ClassMetadata;
 	import org.asstream.reflect.MetadataProcessor;
 	
+	/**
+	 * 
+	 */
 	public class AsStream implements IAsStream, IAsMappingProvider
 	{
 		private var classMappings:Dictionary;
@@ -35,7 +38,46 @@ package org.asstream
 		/* ************************* *
 		 * IAsStream implementations *
 		 * ************************* */
-
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function toXml(obj:Object):XML
+		{
+			return (new EncodeProcess(this)).encode(obj);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function toString(obj:Object):String
+		{
+			return toXml(obj).toXMLString();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function fromXml(xml:XML):Object
+		{
+			return (new DecodeProcess(this)).decode(xml);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function fromString(string:String):Object
+		{
+			return fromXml(new XML(string));
+		}
+		
+		/* ******************************** *
+		 * IAsMappingProvider implementations *
+		 * ******************************** */
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function registerClass(clazz:Class, alias:String=null):void
 		{
 			// create a new ClassMetadata for the class
@@ -46,32 +88,8 @@ package org.asstream
 			classMappings[ classMeta.alias ] = classMeta;
 		}
 		
-		public function toXml(obj:Object):XML
-		{
-			return (new EncodeProcess(this)).encode(obj);
-		}
-		
-		public function toString(obj:Object):String
-		{
-			return toXml(obj).toXMLString();
-		}
-		
-		public function fromXml(xml:XML):Object
-		{
-			return (new DecodeProcess(this)).decode(xml);
-		}
-		
-		public function fromString(string:String):Object
-		{
-			return fromXml(new XML(string));
-		}
-		
-		/* ******************************** *I
-		 * TestableAsStream implementations *
-		 * ******************************** */
-		
 		/**
-		 * Returns true if factory contains a class mapping
+		 * @inheritDoc
 		 */
 		public function containsClassMapping(alias:String):Boolean
 		{
@@ -79,7 +97,7 @@ package org.asstream
 		}
 		
 		/**
-		 * Returns a class mapping for a type
+		 * @inheritDoc
 		 */
 		public function getClassMappingByAlias(alias:String):ClassMetadata
 		{
@@ -87,7 +105,7 @@ package org.asstream
 		}
 		
 		/**
-		 * Returns a class mapping for a type
+		 * @inheritDoc
 		 */
 		public function getClassMappingByType(type:String):ClassMetadata
 		{
@@ -99,7 +117,7 @@ package org.asstream
 		}
 		
 		/**
-		 * Returns classMapping dictionary
+		 * @inheritDoc
 		 */
 		public function getClassMappings():Dictionary
 		{

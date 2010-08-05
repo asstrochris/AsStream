@@ -25,7 +25,7 @@ package org.asstream
 		function toXml(obj:Object):XML;
 		
 		/**
-		 * Converts an object to an string
+		 * Converts an object to a XML String
 		 */
 		function toString(obj:Object):String;
 		
@@ -35,7 +35,7 @@ package org.asstream
 		function fromXml(xml:XML):Object;
 		
 		/**
-		 * Converts an String to a typed AS object
+		 * Converts a XML String to a typed AS object
 		 */
 		function fromString(string:String):Object;
 	}

@@ -22,6 +22,10 @@ package org.asstream.parse
 	import org.asstream.reflect.ClassMetadata;
 	import org.asstream.reflect.ClassUtilities;
 	
+	/**
+	 * Base class for an encoding/decoding context.
+	 * Implements reference cache add/remove and class metadata lookup.
+	 */
 	public class BaseParseProcess
 	{
 		protected var asStream : IAsMappingProvider;
@@ -35,6 +39,9 @@ package org.asstream.parse
 			this.typeConverter = new TypeConverter();
 		}
 		
+		/**
+		 * Looks up the object corresponding to the XML element based on its "reference" or "id" attribute
+		 */
 		protected function findInCache(xml:XML):*
 		{
 			// first check to see if we are looking at a reference
@@ -50,11 +57,17 @@ package org.asstream.parse
 			}
 		}
 		
+		/**
+		 * Adds an object to the cache using the supplied id
+		 */
 		protected function addToCache(cacheId:String, obj:*):void
 		{
 			referenceCache["ref_"+cacheId] = obj;
 		}
 		
+		/**
+		 * Looks up class metadata for the fully-qualified type name
+		 */
 		protected function findClassMetadataByType(type:String):ClassMetadata {
 			var classMeta:ClassMetadata = asStream.getClassMappingByType(type);
 			if (classMeta == null) {
@@ -67,6 +80,9 @@ package org.asstream.parse
 			return classMeta;
 		}
 		
+		/**
+		 * Looks up class metadata for the previously-mapped alias name
+		 */
 		protected function findClassMetadataByAlias(alias:String):ClassMetadata {
 			var classMeta:ClassMetadata = asStream.getClassMappingByAlias(alias);
 			// if we didn't find a class alias, we may have an unaliased element that is not yet registered.

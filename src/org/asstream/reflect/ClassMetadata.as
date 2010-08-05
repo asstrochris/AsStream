@@ -18,6 +18,9 @@ package org.asstream.reflect
 {
 	import flash.utils.Dictionary;
 	
+	/**
+	 * Holds property information and optional alias name for a given type.
+	 */
 	public class ClassMetadata
 	{
 		private var _alias:String;
@@ -65,6 +68,7 @@ package org.asstream.reflect
 		public function addProperty(property:PropertyMetadata):void
 		{
 			_properties[ property.name ] = property;
+			// maintain a lexical array of the properties
 			_propertiesArray.push( property );
 			_propertiesArray.sortOn( "name" );
 		}

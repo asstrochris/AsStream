@@ -21,12 +21,21 @@ package org.asstream.parse
 	import mx.collections.ArrayCollection;
 	import mx.formatters.DateFormatter;
 	
+	/**
+	 * Converts data types to and from ActionScript and XML
+	 */
 	public class TypeConverter
 	{
+		/**
+		 * Returns true if the supplied ActionScript type is simple (cannot be further decomposed like an Object or collection)
+		 */
 		public function isSimpleType( obj:* ):Boolean {
 			return obj is String || obj is Number || obj is Boolean || obj is Date || obj is int || obj is uint;
 		}
 		
+		/**
+		 * Returns true if the supplied XML element is maps to a simple ActionScript type
+		 */
 		public function isSimpleElement( elementName:String ):Boolean {
 			return elementName == "String" || elementName == "Number" || elementName == "Boolean" || elementName == "Date" || elementName == "int" || elementName == "uint";
 		}
@@ -40,7 +49,10 @@ package org.asstream.parse
 		public function isCollectionElement( elementName:String ):Boolean {
 			return elementName == "Array" || elementName == "flash.utils.Dictionary";
 		}
-				
+		
+		/**
+		 * Converts the supplied XML element/value into the proper ActionScript type.
+		 */
 		public function convertType( value : *, type : String ) : * {
 			
 			switch ( type ) {
@@ -63,6 +75,9 @@ package org.asstream.parse
 			return null;
 		}
 		
+		/**
+		 * Converts the supplied ActionScript value into the corresponding XML element.
+		 */
 		public function toXml( value : *, type : String, elementName:String ) : String {
 			
 			switch ( type ) {
@@ -83,14 +98,14 @@ package org.asstream.parse
 		} 
 		
 		/**
-		 * Parses a date using the configured format pattern.
+		 * Parses a date string using the configured format pattern.
 		 */
 		private function parseDate( value : String ) : Date {
 			return new Date( Date.parse( value ) );
 		}
 		
 		/**
-		 * Parses a date using the configured format pattern.
+		 * Formats a date as a string using the configured format pattern.
 		 */
 		private function formatDate( date : Date ) : String {
 			return date.toUTCString();
