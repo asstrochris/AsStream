@@ -101,7 +101,7 @@
 			<arg line="-window-title 'AsStream ${lib.version}'"/>
 		</java>
 		
-		<echo message="${app.name} documentation has been created in ${docs.loc}" />
+		<echo message="${lib.name} documentation has been created in ${docs.loc}" />
 	</target>
 	
 	<target name="package" depends="clean, compile, asdoc" description="Prepares and assembles the .zip artifact with the .swc library and corresponding ASDoc documentation">
