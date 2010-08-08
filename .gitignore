@@ -5,6 +5,7 @@
 /bin/*
 /dist/*
 /docs/*
+/report/*
 /src/FlexUnitApplication.mxml
 
 .actionScriptProperties
